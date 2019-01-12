@@ -222,8 +222,7 @@ if (default == "no") {
 
 	reportdir="report"
 	des2Report <- HTMLReport(shortName = 'RNAseq_analysis_with_DESeq2', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) with user-defined design',reportDirectory = reportdir)
-	
-	publish("PCA plot", des2Report)
+
 	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",pcaplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish(paste0("<center><h3><u>Contrast:</u>  ",condition, " - ", treatment, " vs ", control), des2Report)
