@@ -14,9 +14,9 @@
 def helpMessage() {
     log.info """
     =======================================================
-                                              ,--./,-.
-              ___     __   __   __   ___     /,-._.--~\'
-        |\\ | |__  __ /  ` /  \\ |__) |__         }  {
+                                             ,--./,-.
+              ___     __   __   __   ___    /,-._.--~\'
+        |\\ | |__  __ /  ` /  \\ |__) |__        }  {
         | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                               `._,._,\'
      nf-core/deseq2 v${workflow.manifest.version}
@@ -141,13 +141,15 @@ process deseq2 {
             if (filename.indexOf("_MAplot.png") > 0) "plots/MAplots/$filename"
             else if (filename.indexOf("_VolcanoPlot.png") > 0) "plots/volcanoPlots/$filename"
             else if (filename.indexOf(".txt") > 0) "files/$filename"
+            else if (filename == "PCAplot.png") "plots/$filename"
 	    else "$filename"
     }
 
     output:
     file "*.txt"
     file "*{_MAplot.png,_VolcanoPlot.png}"
-    file report
+    file "PCAplot.png"
+    file "report"
 
     script:
     """
@@ -168,6 +170,7 @@ EOF
 
     run_deseq2.R $inputdir $metadata deseq2.conf
     mv *_AllPlot.png report/figuresRNAseq_analysis_with_DESeq2/.
+    cp PCAplot.png report/figuresRNAseq_analysis_with_DESeq2/.
     """
 }
 

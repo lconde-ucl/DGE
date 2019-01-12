@@ -54,7 +54,6 @@ control = args$deseq2$CONTROL
 pval = as.numeric(args$deseq2$PVAL)
 fc = as.numeric(args$deseq2$FC)
 
-
 #------------
 #- Get counts
 #------------
@@ -91,6 +90,16 @@ default="no"
 if(design == '-'){
 	design = paste0(colnames(colData)[1:ncol(colData)], collapse=" + ")
 	default="yes"
+}else{
+  if(!(condition %in% colnames(colData))) {	
+    stop("ERROR: condition '",condition,"' is not a column of the metadata file, please specify a valid condition")
+  }
+  if(!(treatment %in% levels(colData[colnames(colData) == condition][,1]))) {	
+    stop("ERROR: treatment '",treatment,"' is not a level in condition ",condition,". Please specify a valid treatment")
+  }
+  if(!(control %in% levels(colData[colnames(colData) == condition][,1]))) {	
+    stop("ERROR: control '",control,"' is not a level in condition ",condition,". Please specify a valid control")
+  }
 }
 
 #-------------
@@ -109,6 +118,34 @@ dds <- dds[ rowSums(counts(dds)) > 1, ]
 #- Run DGE
 #----------
 dds <- DESeq(dds)
+
+
+
+#---------
+#- PCA
+#----------
+rld <- rlog(dds, blind=TRUE)
+pcaData<- plotPCA(rld, intgroup=colnames(colData), returnData=TRUE)
+percentVar <- round(100 * attr(pcaData, "percentVar"))
+
+pcaplot_name<-"PCAplot.png"
+png(file=pcaplot_name)
+if(ncol(colData)>1){
+  ggplot(pcaData, aes(PC1, PC2, color=colData[,1], shape=colData[,2])) +
+    geom_point(size=3) +
+    ggtitle("PCA plot") +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
+    theme_classic() + theme(legend.position = "bottom", legend.title=element_blank())
+}else{
+  ggplot(pcaData, aes(PC1, PC2, color=colData[,1])) +
+    geom_point(size=3) +
+    ggtitle("PCA plot") +
+    xlab(paste0("PC1: ",percentVar[1],"% variance")) +
+    ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
+    theme_classic() + theme(legend.position = "bottom", legend.title=element_blank())
+}
+dev.off()
 
 
 if (default == "no") {
@@ -186,15 +223,18 @@ if (default == "no") {
 	reportdir="report"
 	des2Report <- HTMLReport(shortName = 'RNAseq_analysis_with_DESeq2', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) with user-defined design',reportDirectory = reportdir)
 	
-	publish(paste0("Contrast:  ",condition, " - ", treatment, " vs ", control), des2Report)
-	publish("MA/Volcano plots", des2Report)
+	publish("PCA plot", des2Report)
+	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",pcaplot_name))
+	publish(hwrite(himg, br=TRUE, center=T), des2Report)
+	publish(paste0("<center><h3><u>Contrast:</u>  ",condition, " - ", treatment, " vs ", control), des2Report)
+	publish("<h4>MA/Volcano plots", des2Report)
 	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",allplot_name))
-        publish(hwrite(himg, br=TRUE), des2Report)
-	publish("Top 100 differentially expressed genes", des2Report)
+	publish(hwrite(himg, br=TRUE, center=T), des2Report)
+	publish("<h4>Top 100 differentially expressed genes", des2Report)
 	publish(resNorm,des2Report, reportDir=reportdir, pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
 	
 	finish(des2Report)
-	
+
 }else{
 
 	#-------------------------------------------------------------
@@ -202,6 +242,8 @@ if (default == "no") {
 	#-------------------------------------------------------------
 	reportdirALL="report"
 	des2ReportALL <- HTMLReport(shortName = 'RNAseq_analysis_with_DESeq2', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) in default (no design) mode',reportDirectory = reportdirALL)
+	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",pcaplot_name))
+	publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 	n=1
 	for (i in 1:ncol(colData)) {
 		pairs<-combn(unique(colData[,i]),2)
@@ -270,16 +312,15 @@ if (default == "no") {
 			  plot(NA,xlim=0:1,ylim=0:1,bty="n",axes=0,xaxs = 'i',yaxs='i')
 			  rasterImage(eval(parse(text=paste0("img", l))),0,0,1,1)
 			}
-			#dev.copy(png,allplot_name, width=1200, height=600)
 		        dev.off()
 
-			publish(paste0("Contrast", n, ":  ", colnames(colData)[i], " - ",  paste0(as.character(pairs[,j]),collapse=" vs ")), des2ReportALL)
-			publish("MA/Volcano plots", des2ReportALL)
+			publish(paste0("<center><h3><u>Contrast ", n, ":</u>  ", colnames(colData)[i], " - ",  paste0(as.character(pairs[,j]),collapse=" vs ")), des2ReportALL)
+			publish("<h4>MA/Volcano plots", des2ReportALL)
 			himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",allplot_name))
-			publish(hwrite(himg, br=TRUE), des2ReportALL)
-			publish("Top 100 differentially expressed genes", des2ReportALL)
+			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
+			publish("<h4>Top 100 differentially expressed genes", des2ReportALL)
 			publish(resNorm,des2ReportALL, reportDir=reportdirALL, pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
-			n=n+1
+      			n=n+1
 		}	
 	}
 	finish(des2ReportALL)
