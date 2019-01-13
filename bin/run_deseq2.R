@@ -266,7 +266,7 @@ if (default == "no") {
 	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",allplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish("<h4>Top 100 differentially expressed genes", des2Report)
-	publish(resNorm,des2Report, contrast=paste0(condition, "_", treatment, "_vs_", control), pvalueCutoff=1, n=100, DataSet=dds, factor=condition)
+	publish(resNorm,des2Report, contrast=paste0(condition, "_", treatment, "_vs_", control), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[condition]])
 	
 	finish(des2Report)
 
