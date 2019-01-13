@@ -169,8 +169,8 @@ FC = $params.fc
 EOF
 
     run_deseq2.R $inputdir $metadata deseq2.conf
-    mv *_AllPlot.png report/figuresRNAseq_analysis_with_DESeq2/.
-    cp PCAplot.png report/figuresRNAseq_analysis_with_DESeq2/.
+    mv *_AllPlot.png report/figures_DESeq2_nextflow_pipeline_results/.
+    cp PCAplot.png report/figures_DESeq2_nextflow_pipeline_results/.
     """
 }
 

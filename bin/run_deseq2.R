@@ -148,6 +148,42 @@ if(ncol(colData)>1){
 dev.off()
 
 
+#-----------------------------------------------------------------------
+#- Modify one of the funstions in ReportingTools so that the norm count 
+#- 	plots per gene are i different folders for each contrast
+#-	so that plots for a gene that come up in 2 analysis are not overwritten
+#- modified from https://rdrr.io/bioc/ReportingTools/src/R/addReportColumns-methods.R
+#-----------------------------------------------------------------------
+setMethod("modifyReportDF",
+          signature = signature(
+            object = "DESeqResults"),
+          definition = function(df, htmlRep, object, DataSet, factor, 
+                             make.plots = TRUE, contrast, ...)
+          {
+            if("EntrezId" %in% colnames(df)){
+              df <- entrezGene.link(df)
+            }
+            if(make.plots){
+              dots <- list(...)
+              par.settings <- list()
+              if("par.settings" %in% names(dots))
+                par.settings <- dots$par.settings
+              
+              figure.dirname <- paste('figures', htmlRep$shortName,"/",contrast, sep='')  
+              figure.directory <- file.path(dirname(path(htmlRep)), 
+                                            figure.dirname)
+              dir.create(figure.directory, recursive = TRUE)
+              
+              df <- ReportingTools:::eSetPlot(df, DataSet, factor, figure.directory,
+                             figure.dirname, par.settings = par.settings, 
+                             ylab.type = "Normalized Counts")
+              df
+            }
+            df
+          }
+)
+
+
 if (default == "no") {
 	  
 	#-------------------------------------------------------------
@@ -221,16 +257,16 @@ if (default == "no") {
 	dev.off()
 
 	reportdir="report"
-	des2Report <- HTMLReport(shortName = 'RNAseq_analysis_with_DESeq2', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) with user-defined design',reportDirectory = reportdir)
+	des2Report <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) with user-defined design',reportDirectory = reportdir)
 
-	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",pcaplot_name))
+	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",pcaplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish(paste0("<center><h3><u>Contrast:</u>  ",condition, " - ", treatment, " vs ", control), des2Report)
 	publish("<h4>MA/Volcano plots", des2Report)
-	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",allplot_name))
+	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",allplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish("<h4>Top 100 differentially expressed genes", des2Report)
-	publish(resNorm,des2Report, reportDir=reportdir, pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
+	publish(resNorm,des2Report, contrast=paste0(condition, "_", treatment, "_vs_", control), pvalueCutoff=1, n=100, DataSet=dds, factor=condition)
 	
 	finish(des2Report)
 
@@ -240,8 +276,8 @@ if (default == "no") {
 	#- Get results using default design and all possible contrasts 
 	#-------------------------------------------------------------
 	reportdirALL="report"
-	des2ReportALL <- HTMLReport(shortName = 'RNAseq_analysis_with_DESeq2', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) in default (no design) mode',reportDirectory = reportdirALL)
-	himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",pcaplot_name))
+	des2ReportALL <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) in default (no design) mode',reportDirectory = reportdirALL)
+	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",pcaplot_name))
 	publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 	n=1
 	for (i in 1:ncol(colData)) {
@@ -315,11 +351,11 @@ if (default == "no") {
 
 			publish(paste0("<center><h3><u>Contrast ", n, ":</u>  ", colnames(colData)[i], " - ",  paste0(as.character(pairs[,j]),collapse=" vs ")), des2ReportALL)
 			publish("<h4>MA/Volcano plots", des2ReportALL)
-			himg <- hwriteImage(paste0("figuresRNAseq_analysis_with_DESeq2/",allplot_name))
+			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",allplot_name))
 			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			publish("<h4>Top 100 differentially expressed genes", des2ReportALL)
-			publish(resNorm,des2ReportALL, reportDir=reportdirALL, pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
-      			n=n+1
+			publish(resNorm,des2ReportALL, contrast = paste0(colnames(colData)[i], "_", paste0(as.character(pairs[,j]),collapse="_vs_")), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
+			n=n+1
 		}	
 	}
 	finish(des2ReportALL)
