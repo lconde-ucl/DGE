@@ -78,7 +78,7 @@ colData<-colData[,-c(1)]
 #- Specify design and contrast
 #-------------------------------
 default="no"
-if(design == '-'){
+if(design == 'false'){
 	design = paste0(colnames(colData)[1:ncol(colData)], collapse=" + ")
 	default="yes"
 }else{
@@ -99,7 +99,7 @@ if(design == '-'){
 #-  are all in countData, and that they are in the same order
 #-----------------------------------------------------------------------
 counts="featureCounts"
-if(kallisto == '-'){
+if(kallisto == 'false'){
 
   countData<-read.table(paste0(inputdir,"/featureCounts/merged_gene_counts.txt"), sep="\t", header=T, check.names=FALSE)
   geneID<-countData$ENSEMBL_ID
@@ -179,9 +179,9 @@ if(ncol(colData)>1){
 dev.off()
 
 #-----------------------------------------------------------------------
-#- Modify one of the funstions in ReportingTools so that the norm count 
-#- 	plots per gene are i different folders for each contrast
-#-	so that plots for a gene that come up in 2 analysis are not overwritten
+#- Modify one of the functions in ReportingTools so that the norm count 
+#- 	plots per gene are in different folders for each contrast
+#-	so that plots for a gene that come up in 2 analyses are not overwritten
 #- modified from https://rdrr.io/bioc/ReportingTools/src/R/addReportColumns-methods.R
 #-----------------------------------------------------------------------
 setMethod("modifyReportDF",
@@ -356,7 +356,7 @@ if (default == "no") {
 			scale_color_manual(values=c("indianred1", "gold2", "cornflowerblue", "gray47")) + 
 			theme_classic() + theme(legend.position = "bottom", legend.title=element_blank())
 
-			#- add gene labels for gene swith pval anf fc below theresholds
+			#- add gene labels for genes with pval anf fc below theresholds
 			ha2 <- ha %>%
 			   filter(Pval < pval & (logFC >= fc | logFC <= -fc)) %>% 
 			   select(gene,logFC,Pval, Col)

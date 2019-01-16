@@ -60,10 +60,10 @@ params.metadata="metadata.txt"
 params.outdir = "results_deseq2"
 params.kallisto = false
 params.assembly = false
-params.design = "-"
-params.condition = "-"
-params.treatment = "-"
-params.control = "-"
+params.design = false
+params.condition = false
+params.treatment = false
+params.control = false
 params.pval = 1e-50
 params.fc = 3
 
@@ -79,13 +79,13 @@ if( !params.metadata ){
 metadata = file(params.metadata)
 if( !metadata.exists() ) exit 1, "Metadata file not found: ${params.metadata}. Specify path with --metadata."
 
-if ((params.design != "-") && (params.condition == "-" || params.treatment == "-" || params.control == "-")){
+if ((params.design) && (!params.condition || !params.treatment || !params.control)){
     exit 1, "Invalid arguments: --design \'${params.design}\' requieres --condition, --treatment and --control. Pelase specify all of them or run the pipeline without specifying any design"
 }
-if ((params.condition != "-") && (params.design == "-" || params.treatment == "-" || params.control == "-")){
+if ((params.condition) && (!params.design || !params.treatment || !params.control)){
     exit 1, "Invalid arguments: --condition \'${params.condition}\' requieres --design, --treatment and --control. Pelase specify all of them or run the pipeline without specifying any design"
 }
-if ((params.treatment != "-") && (params.design == "-" || params.condition == "-" || params.control == "-")){
+if ((params.treatment) && (!params.design || !params.condition || !params.control)){
     exit 1, "Invalid arguments: --treatment \'${params.treatment}\' requieres --design, --condition and --control. Pelase specify all of them or run the pipeline without specifying any design"
 }
 if ((params.control) && (!params.design || !params.treatment || !params.condition)){
@@ -101,10 +101,8 @@ if(params.kallisto && params.assembly){
 	params.tx2gene = params.assembly ? params.genomes[ params.assembly ].tx2gene ?: false : false
 	tx2gene = file(params.tx2gene)
 	if( !tx2gene.exists() ) exit 1, "tx2gene file not found: ${params.tx2gene}"
-	kallisto=params.kallisto
 }else{
 	tx2gene='-'
-	kallisto='-'
 }
 
 
@@ -188,7 +186,7 @@ TREATMENT = $params.treatment
 CONTROL = $params.control
 PVAL = $params.pval
 FC = $params.fc
-KALLISTO = $kallisto
+KALLISTO = $params.kallisto
 TX2GENE = $tx2gene
 
 EOF
