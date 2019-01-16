@@ -33,6 +33,8 @@ def helpMessage() {
                                         and the other (1 or more) columns displays the conditions for each sample. The samples 
                                         must match those in the featureCounts matrix data located in inputdir [metadata.txt] 
     Options:
+      --kallisto                    Run DESEq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly [null]
+      --assembly                    Required when in kallisto mode, should be the same assembly used when running kallisto. Possible values are hg19, hg38, or mm10 [null]
       --design                      Specifies DESeq2 design. If defined, --condition, --treatment and --control must also be defined [null]
       --condition                   Specifies 'condition' for the DESeq2 contrast. Requires --design to be specified [null]
       --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
@@ -56,13 +58,14 @@ if (params.help){
 params.inputdir="results"
 params.metadata="metadata.txt"
 params.outdir = "results_deseq2"
+params.kallisto = false
+params.assembly = false
 params.design = "-"
 params.condition = "-"
 params.treatment = "-"
 params.control = "-"
 params.pval = 1e-50
 params.fc = 3
-
 
 if( !params.inputdir ){
     exit 1, "No inputdir specified!"
@@ -88,7 +91,21 @@ if ((params.treatment != "-") && (params.design == "-" || params.condition == "-
 if ((params.control) && (!params.design || !params.treatment || !params.condition)){
     exit 1, "Invalid arguments: --control \'${params.control}\' requieres --design, --condition and --treatment. Pelase specify all of them or run the pipeline without specifying any design"
 }
-
+if (params.kallisto  && !params.assembly){
+    exit 1, "Running the pipeline in kallisto mode requires specifying an assembly. Valid options: 'hg19', 'hg38', 'mm10'"
+}
+if (params.kallisto && (params.assembly!= 'hg19' && params.assembly != 'hg38' && params.assembly != 'mm10')){
+    exit 1, "Invalid assembly option: ${params.assembly}. Valid options: 'hg19', 'hg38', 'mm10'"
+}
+if(params.kallisto && params.assembly){
+	params.tx2gene = params.assembly ? params.genomes[ params.assembly ].tx2gene ?: false : false
+	tx2gene = file(params.tx2gene)
+	if( !tx2gene.exists() ) exit 1, "tx2gene file not found: ${params.tx2gene}"
+	kallisto=params.kallisto
+}else{
+	tx2gene='-'
+	kallisto='-'
+}
 
 
 // Header 
@@ -111,6 +128,12 @@ if(params.design != "-"){
 	println "['DESeq2 control']    = $params.control"
 }else{
 	println "['DESeq2 design']     = No design specified"
+}
+if(params.kallisto){
+	println "['Read counts mode']  = kallisto"
+	println "['Assembly']             = $params.assembly"
+}else{
+	println "['Read counts mode']     = featureCounts"
 }
 if(params.pval != "-"){
 	println "['Volcano plot Pval threshold'] = $params.pval"
@@ -165,6 +188,8 @@ TREATMENT = $params.treatment
 CONTROL = $params.control
 PVAL = $params.pval
 FC = $params.fc
+KALLISTO = $kallisto
+TX2GENE = $tx2gene
 
 EOF
 

@@ -13,6 +13,16 @@ if (!require("DESeq2")){
   biocLite("DESeq2", suppressUpdates=TRUE)
   library("DESeq2")
 }
+if (!require("rhdf5")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("rhdf5", suppressUpdates=TRUE)
+  library("rhdf5")
+}
+if (!require("tximport")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("tximport", suppressUpdates=TRUE)
+  library("tximport")
+}
 if (!require("ReportingTools")){
   source("http://bioconductor.org/biocLite.R")
   biocLite("ReportingTools", suppressUpdates=TRUE)
@@ -53,35 +63,16 @@ treatment = args$deseq2$TREATMENT
 control = args$deseq2$CONTROL
 pval = as.numeric(args$deseq2$PVAL)
 fc = as.numeric(args$deseq2$FC)
+kallisto = args$deseq2$KALLISTO
+tx2gene.file = args$deseq2$TX2GENE
 
-#------------
-#- Get counts
-#------------
-countData<-read.table(paste0(inputdir,"/featureCounts/merged_gene_counts.txt"), sep="\t", header=T, check.names=FALSE)
-geneID<-countData$ENSEMBL_ID
-countData<-select(countData, -ENSEMBL_ID)
-rownames(countData)<-geneID
 
 #--------------
 #- Get metadata
 #--------------
 colData <- read.table(metadata, sep="\t",header=T)
-
-#-------------------------------------------------------------------------
-#- Make sure that first column has the sample names, that these samples
-#-  are all in countData, and that they are in the same order
-#-------------------------------------------------------------------------
 rownames(colData)<-colData[,1]
 colData<-colData[,-c(1)]
-if(length(rownames(colData)[!rownames(colData) %in% colnames(countData)]) > 0) {	
-	stop("ERROR: the following samples are not in the featureCounts matrix: ", paste(rownames(colData)[!rownames(colData) %in% colnames(countData)], collapse=", "),
-	      ". Please ,ake sure that the first column of your metadata file has the sample IDs.")
-}else{
-  countData = countData[ , rownames(colData) ]
-  if(!all(rownames(colData) == colnames(countData))) {	
-    stop("Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
-  }
-}
 
 #-------------------------------
 #- Specify design and contrast
@@ -102,12 +93,54 @@ if(design == '-'){
   }
 }
 
-#-------------
-#- create DDS
-#-------------
-dds <- DESeqDataSetFromMatrix(countData = countData,
-            colData = colData,
-            design = eval(parse(text=paste0("~ ", design))))
+#-----------------------------------------------------------------------
+#- Get counts and create dds
+#- Make sure that first column has the sample names, that these samples
+#-  are all in countData, and that they are in the same order
+#-----------------------------------------------------------------------
+counts="featureCounts"
+if(kallisto == '-'){
+
+  countData<-read.table(paste0(inputdir,"/featureCounts/merged_gene_counts.txt"), sep="\t", header=T, check.names=FALSE)
+  geneID<-countData$ENSEMBL_ID
+  countData<-select(countData, -ENSEMBL_ID)
+  rownames(countData)<-geneID 
+
+   if(length(rownames(colData)[!rownames(colData) %in% colnames(countData)]) > 0) {	
+    stop("ERROR: the following samples are not in the featureCounts matrix: ", paste(rownames(colData)[!rownames(colData) %in% colnames(countData)], collapse=", "),
+         ". Please make sure that the first column of your metadata file has the sample IDs.")
+  }else{
+    countData = countData[ , rownames(colData) ]
+    if(!all(rownames(colData) == colnames(countData))) {	
+      stop("Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
+    }
+  }
+  dds <- DESeqDataSetFromMatrix(countData = countData,
+                                colData = colData,
+                                design = eval(parse(text=paste0("~ ", design))))
+}else{
+  counts="kallisto"
+  
+  files <- file.path(inputdir, "kallisto", rownames(colData), "abundance.h5")
+  names(files)<-basename(dirname(files))
+  if(length(rownames(colData)[!rownames(colData) %in% names(files)]) > 0) {	
+    stop("ERROR: the following samples don't have a kallisto abundance.h5 file: ", paste(rownames(colData)[!rownames(colData) %in% names(files)], collapse=", "),
+         ". Please make sure that the first column of your metadata file has the sample IDs.")
+  }else{
+    tx2gene<-read.table(tx2gene.file, header=T, sep="\t")
+    tx2gene_ext<-select(tx2gene, -ENSEMBL_GENE_ID)
+    txi.kallisto <- tximport(files, type = "kallisto", tx2gene=tx2gene_ext)
+    countData<-txi.kallisto$counts
+    countData = countData[ , rownames(colData) ] #- this is not really necessary as this should already be sorted properly
+    if(!all(rownames(colData) == colnames(countData))) {	
+      stop("Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
+    }  
+    dds <- DESeqDataSetFromTximport(txi=txi.kallisto,
+                                    colData=colData,
+                                    design=eval(parse(text=paste0("~ ", design))))
+  }
+ 
+}
 
 #-------------------------------------------
 #- remove genes with 0 counts in all samples
@@ -118,8 +151,6 @@ dds <- dds[ rowSums(counts(dds)) > 1, ]
 #- Run DGE
 #----------
 dds <- DESeq(dds)
-
-
 
 #---------
 #- PCA
@@ -146,7 +177,6 @@ if(ncol(colData)>1){
     theme_classic() + theme(legend.position = "bottom", legend.title=element_blank())
 }
 dev.off()
-
 
 #-----------------------------------------------------------------------
 #- Modify one of the funstions in ReportingTools so that the norm count 
@@ -182,7 +212,6 @@ setMethod("modifyReportDF",
             df
           }
 )
-
 
 if (default == "no") {
 	  
@@ -257,7 +286,8 @@ if (default == "no") {
 	dev.off()
 
 	reportdir="report"
-	des2Report <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) with user-defined design',reportDirectory = reportdir)
+	title=paste0('RNA-seq DGE analysis using DESeq2 with user-defined design and ',counts, ' counts')
+	des2Report <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = title, reportDirectory = reportdir)
 
 	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",pcaplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
@@ -276,7 +306,9 @@ if (default == "no") {
 	#- Get results using default design and all possible contrasts 
 	#-------------------------------------------------------------
 	reportdirALL="report"
-	des2ReportALL <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = 'RNA-seq DGE analysis using DESeq2 (\'normal\' shrinkage) in default (no design) mode',reportDirectory = reportdirALL)
+	title=paste0('RNA-seq DGE analysis using DESeq2 with default (no design specified) mode and ',counts, ' counts')
+	des2ReportALL <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = title, reportDirectory = reportdirALL)
+
 	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",pcaplot_name))
 	publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 	n=1
