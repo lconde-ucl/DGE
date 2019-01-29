@@ -42,14 +42,6 @@ def helpMessage() {
       --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
       --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
 
-    Options - gsea:
-      --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
-      --gmt                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
-      --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
-      --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
-      --perm NUM                    Number of permutations [1000]";
-      
-
     Options - other:
       --outdir                      The output directory where the results will be saved [results_deseq2]
       --pval                        Pval threshold to display gene labels in the volcano plot [1e-50]
@@ -76,10 +68,6 @@ params.design = false
 params.condition = false
 params.treatment = false
 params.control = false
-params.skip_gsea = false
-params.perm = 1000
-params.min_set = 15
-params.max_set = 500
 params.pval = 1e-50
 params.fc = 3
 
@@ -120,17 +108,6 @@ if(params.kallisto && params.assembly){
 }else{
 	tx2gene='-'
 }
-if(!params.skip_gsea){
-	if (params.assembly && params.assembly != 'hg19' && params.assembly != 'hg38'){
-	    exit 1, "GSEA can only be run on human (assembly hg19 or hg38). You are indicating that your assembly is ${params.assembly}. Please correct the assembly if this was a mistake, or use --skip_gsea to skip the GASE step"
-	}else{
-		params.gmx = params.assembly ? params.genomes[ params.assembly ].gmx ?: false : false
-		gmx = file(params.gmx)
-		if( !gmx.exists() ) exit 1, "GMX file not found: ${params.gmx}"
-	}
-}else{
-	gmx='-'
-}
 
 
 // Header 
@@ -160,11 +137,6 @@ if(params.kallisto){
 }else{
 	println "['Read counts mode']     = featureCounts"
 }
-if(!params.skip_gsea){
-	println "['GSEA step']         = True"
-}else{
-	println "['GSEA step']         = False"
-}
 if(params.pval != "-"){
 	println "['Volcano plot Pval threshold'] = $params.pval"
 }
@@ -186,52 +158,6 @@ println "========================================================"
 
 /*
  * STEP 1 - DESeq2
- */
-
-process deseq2 {
-    publishDir "${params.outdir}", mode: 'copy',
-    saveAs: {filename ->
-            if (filename.indexOf("_MAplot.png") > 0) "plots/MAplots/$filename"
-            else if (filename.indexOf("_VolcanoPlot.png") > 0) "plots/volcanoPlots/$filename"
-            else if (filename.indexOf(".txt") > 0) "files/$filename"
-            else if (filename == "PCAplot.png") "plots/$filename"
-	    else "$filename"
-    }
-
-    output:
-    file "*.txt"
-    file "*{_MAplot.png,_VolcanoPlot.png}"
-    file "PCAplot.png"
-    file "report"
-
-    script:
-    """
-
-cat > deseq2.conf << EOF
-[deseq2]
-
-INPUTDIR = $inputdir
-METADATA = $metadata
-DESIGN = $params.design
-CONDITION = $params.condition
-TREATMENT = $params.treatment
-CONTROL = $params.control
-PVAL = $params.pval
-FC = $params.fc
-KALLISTO = $params.kallisto
-TX2GENE = $tx2gene
-
-EOF
-
-    run_deseq2.R $inputdir $metadata deseq2.conf
-    mv *_AllPlot.png report/figuresDESeq2_nextflow_pipeline_results/.
-    cp PCAplot.png report/figuresDESeq2_nextflow_pipeline_results/.
-    """
-}
-
-
-/*
- * STEP 2 - GSEA
  */
 
 process deseq2 {
