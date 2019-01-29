@@ -72,7 +72,7 @@ tx2gene.file = args$deseq2$TX2GENE
 #--------------
 colData <- read.table(metadata, sep="\t",header=T)
 rownames(colData)<-colData[,1]
-colData<-colData[,-c(1)]
+colData<-as.data.frame(colData[,-c(1)])
 
 #-------------------------------
 #- Specify design and contrast
