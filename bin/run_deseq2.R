@@ -71,8 +71,10 @@ tx2gene.file = args$deseq2$TX2GENE
 #- Get metadata
 #--------------
 colData <- read.table(metadata, sep="\t",header=T)
-rownames(colData)<-colData[,1]
+samples<-colData[,1]
 colData<-as.data.frame(colData[,-c(1)])
+rownames(colData)<-samples
+
 
 #-------------------------------
 #- Specify design and contrast
