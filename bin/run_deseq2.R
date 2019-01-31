@@ -289,7 +289,7 @@ if (default == "no") {
 	}
 	dev.off()
 
-	reportdir="report"
+	reportdir="deseq2_report"
 	title=paste0('RNA-seq DGE analysis using DESeq2 with user-defined design and ',counts, ' counts')
 	des2Report <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = title, reportDirectory = reportdir)
 
@@ -309,7 +309,7 @@ if (default == "no") {
 	#-------------------------------------------------------------
 	#- Get results using default design and all possible contrasts 
 	#-------------------------------------------------------------
-	reportdirALL="report"
+	reportdirALL="deseq2_report"
 	title=paste0('RNA-seq DGE analysis using DESeq2 with default (no design specified) mode and ',counts, ' counts')
 	des2ReportALL <- HTMLReport(shortName = 'DESeq2_nextflow_pipeline_results', title = title, reportDirectory = reportdirALL)
 
