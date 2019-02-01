@@ -2,11 +2,11 @@
 
 /*
 ========================================================================================
-                         nf-core/deseq2
+                         nf-core/DGE
 ========================================================================================
- nf-core/deseq2 Analysis Pipeline.
+ nf-core/DGE Analysis Pipeline.
  #### Homepage / Documentation
- https://github.com/nf-core/deseq2
+ https://github.com/nf-core/DGE
 ----------------------------------------------------------------------------------------
 */
 
@@ -20,13 +20,13 @@ def helpMessage() {
         |\\ | |__  __ /  ` /  \\ |__) |__        }  {
         | \\| |       \\__, \\__/ |  \\ |___     \\`-._,-`-,
                                               `._,._,\'
-     nf-core/deseq2 v${workflow.manifest.version}
+     nf-core/DGE v${workflow.manifest.version}
     =======================================================
     Usage:
 
     The typical command for running the pipeline is as follows:
 
-    nextflow run nf-core/deseq2 --inputdir results_rnaseq --metadata metadata.txt --outdir results_deseq2 
+    nextflow_dge --inputdir results_rnaseq --metadata metadata.txt --outdir results_DGE 
 
     Mandatory arguments:
       --inputdir                    Path to nextflow_rnaseq results folder [results]
@@ -52,7 +52,7 @@ def helpMessage() {
       
 
     Options - other:
-      --outdir                      The output directory where the results will be saved [results_deseq2]
+      --outdir                      The output directory where the results will be saved [results_DGE]
       --pval                        Pval threshold to display gene labels in the volcano plot [1e-50]
       --fc                          FC threshold to display gene labels in the volcano plot [3]
     """.stripIndent()
@@ -70,7 +70,7 @@ if (params.help){
 // Configurable variables and validate inputs
 params.inputdir="results"
 params.metadata="metadata.txt"
-params.outdir = "results_deseq2"
+params.outdir = "results_DGE"
 params.kallisto = false
 params.assembly = false
 params.design = false
@@ -141,9 +141,9 @@ println "    |\\ | |__  __ /  `/  \\ |__)|__        }  {         "
 println "    | \\| |       \\__ \\__/ |  \\|___   \\`-._,-`-,    "
 println "                                      `._,._,\'         "
 println "                                                        "
-println "           D E S E Q 2    P I P E L I N E               "
+println "            D G E    P I P E L I N E                    "
 println "========================================================"
-println "['Pipeline Name']     = nf-core/deseq2"
+println "['Pipeline Name']     = nf-core/DGE"
 println "['Pipeline Version']  = $workflow.manifest.version"
 println "['Inputdir']          = $params.inputdir"
 if(params.design != "-"){
