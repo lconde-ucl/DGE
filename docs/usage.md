@@ -127,10 +127,10 @@ following analysis:
 ```
 Design: ~ Status + Levels
 Comparisons:
-	cases vs. controls
-	high vs. medium levels
-	high vs. low levels
-	medium vs. low levels
+	cases vs. controls (status)
+	high vs. medium (levels)
+	high vs. low (levels)
+	medium vs. low (levels)
 ```
 
 This default behaviour (all possible comparisons) can be overrided and the user can choose the design and comparison of interest by specifying the following arguments:
@@ -164,10 +164,10 @@ Not used by default.
 File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB .
 
 ### `--min_set NUM`
-Ignore gene sets that contain less than NUM genes
+Ignore gene sets that contain less than NUM genes.
 
 ### `--max_set NUM`
-Ignore gene sets that contain more than NUM genes
+Ignore gene sets that contain more than NUM genes.
 
 ### `--perm NUM`
 Number of permutations for the NES calculation.
@@ -181,12 +181,12 @@ Each step in the pipeline has a default set of requirements for number of CPUs, 
 ## Other command line parameters
 
 ### `--pval`
-Pval threshold to display gene labels in the output volcano plot
+Pval threshold to display gene labels in the output volcano plot.
 Default:  1e-50
 
 ### `--fc`
-FC threshold to display gene labels in the output volcano plot
-Dafault: 3
+FC threshold to display gene labels in the output volcano plot.
+Default: 3
 
 ### `--outdir`
 The output directory where the results will be saved.
