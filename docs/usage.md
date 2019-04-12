@@ -1,38 +1,3 @@
-Usage:
-
-The typical command for running the pipeline is as follows:
-
-nextflow_dge --inputdir results_rnaseq --metadata metadata.txt --outdir results_DGE 
-
-Mandatory arguments:
-  --inputdir                    Path to nextflow_rnaseq results folder [results]
-  --metadata                    Path to metadata. This should be a txt file where the first column are the sample IDs, 
-                                    and the other (1 or more) columns displays the conditions for each sample. The samples 
-                                    must match those in the featureCounts matrix data located in inputdir [metadata.txt] 
-Options - kallisto mode:
-  --kallisto                    Run DESEq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly [null]
-  --assembly                    Required when in kallisto mode, should be the same assembly used when running kallisto. Possible values are hg19, hg38, or mm10 [null]
-
-Options - deseq2 model:
-  --design                      Specifies DESeq2 design. If defined, --condition, --treatment and --control must also be defined [null]
-  --condition                   Specifies 'condition' for the DESeq2 contrast. Requires --design to be specified [null]
-  --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
-  --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
-
-Options - gsea (human only):
-  --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
-  --gmt                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
-  --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
-  --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
-  --perm NUM                    Number of permutations [1000]";
-
-
-Options - other:
-  --outdir                      The output directory where the results will be saved [results_DGE]
-  --pval                        Pval threshold to display gene labels in the volcano plot [1e-50]
-  --fc                          FC threshold to display gene labels in the volcano plot [3]
-
-
 # DGE: Usage
 
 ## Table of contents
