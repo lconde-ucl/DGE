@@ -1,0 +1,1 @@
+2019-04-12 09:38:00	-	exotic_agnesi	-	7d4d6784d792bf1d3e613229280d479d	e16520b2-4e5d-4bcb-88ba-b8980cb76602	nextflow run /shared/ucl/depts/cancer/apps/nextflow_pipelines/DGE -profile legion --help

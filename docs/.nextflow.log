@@ -1,0 +1,67 @@
+Apr-12 09:37:55.534 [main] DEBUG nextflow.cli.Launcher - $> /shared/ucl/depts/cancer/apps/nextflow/0.32.0/nextflow run /shared/ucl/depts/cancer/apps/nextflow_pipelines/DGE -profile legion --help
+Apr-12 09:37:58.181 [main] INFO  nextflow.cli.CmdRun - N E X T F L O W  ~  version 0.32.0
+Apr-12 09:37:59.752 [main] INFO  nextflow.cli.CmdRun - Launching `/shared/ucl/depts/cancer/apps/nextflow_pipelines/DGE/main.nf` [exotic_agnesi] - revision: 7d4d6784d7
+Apr-12 09:37:59.764 [main] DEBUG nextflow.config.ConfigBuilder - Found config base: /shared/ucl/depts/cancer/apps/nextflow_pipelines/DGE/nextflow.config
+Apr-12 09:37:59.765 [main] DEBUG nextflow.config.ConfigBuilder - Parsing config file: /shared/ucl/depts/cancer/apps/nextflow_pipelines/DGE/nextflow.config
+Apr-12 09:37:59.773 [main] DEBUG nextflow.config.ConfigBuilder - Applying config profile: `legion`
+Apr-12 09:37:59.940 [main] DEBUG nextflow.config.ConfigBuilder - Available config profiles: [legion, myriad, none]
+Apr-12 09:37:59.973 [main] DEBUG nextflow.Session - Session uuid: e16520b2-4e5d-4bcb-88ba-b8980cb76602
+Apr-12 09:37:59.973 [main] DEBUG nextflow.Session - Run name: exotic_agnesi
+Apr-12 09:37:59.974 [main] DEBUG nextflow.Session - Executor pool size: 16
+Apr-12 09:38:00.052 [main] DEBUG nextflow.cli.CmdRun - 
+  Version: 0.32.0 build 4897
+  Modified: 27-09-2018 10:17 UTC (11:17 BST)
+  System: Linux 3.10.0-693.11.6.el7.x86_64
+  Runtime: Groovy 2.5.1 on Java HotSpot(TM) 64-Bit Server VM 1.8.0_92-b14
+  Encoding: UTF-8 (UTF-8)
+  Process: 14772@login02 [10.41.1.22]
+  CPUs: 16 - Mem: 62.7 GB (55.7 GB) - Swap: 1.8 TB (1.8 TB)
+Apr-12 09:38:00.141 [main] DEBUG nextflow.Session - Work-dir: /lustre/scratch/scratch/regmond/github_reps/DGE/docs/work [lustre]
+Apr-12 09:38:01.794 [main] DEBUG nextflow.Session - Session start invoked
+Apr-12 09:38:01.798 [main] DEBUG nextflow.processor.TaskDispatcher - Dispatcher > start
+Apr-12 09:38:01.799 [main] DEBUG nextflow.trace.TraceFileObserver - Flow starting -- trace file: /lustre/scratch/scratch/regmond/github_reps/DGE/docs/results_DGE/pipeline_info/DGE_trace.txt
+Apr-12 09:38:01.802 [main] DEBUG nextflow.script.ScriptRunner - > Script parsing
+Apr-12 09:38:02.230 [main] DEBUG nextflow.script.ScriptRunner - > Launching execution
+Apr-12 09:38:02.239 [main] INFO  nextflow.Nextflow - 
+=======================================================
+                                         ,--./,-.
+          ___     __   __   __   ___    /,-._.--~'
+    |\ | |__  __ /  ` /  \ |__) |__        }  {
+    | \| |       \__, \__/ |  \ |___     \`-._,-`-,
+                                          `._,._,'
+ nf-core/DGE v1.0dev
+=======================================================
+Usage:
+
+The typical command for running the pipeline is as follows:
+
+nextflow_dge --inputdir results_rnaseq --metadata metadata.txt --outdir results_DGE 
+
+Mandatory arguments:
+  --inputdir                    Path to nextflow_rnaseq results folder [results]
+  --metadata                    Path to metadata. This should be a txt file where the first column are the sample IDs, 
+                                    and the other (1 or more) columns displays the conditions for each sample. The samples 
+                                    must match those in the featureCounts matrix data located in inputdir [metadata.txt] 
+Options - kallisto mode:
+  --kallisto                    Run DESEq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly [null]
+  --assembly                    Required when in kallisto mode, should be the same assembly used when running kallisto. Possible values are hg19, hg38, or mm10 [null]
+
+Options - deseq2 model:
+  --design                      Specifies DESeq2 design. If defined, --condition, --treatment and --control must also be defined [null]
+  --condition                   Specifies 'condition' for the DESeq2 contrast. Requires --design to be specified [null]
+  --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
+  --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
+
+Options - gsea (human only):
+  --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
+  --gmt                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
+  --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
+  --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
+  --perm NUM                    Number of permutations [1000]";
+
+
+Options - other:
+  --outdir                      The output directory where the results will be saved [results_DGE]
+  --pval                        Pval threshold to display gene labels in the volcano plot [1e-50]
+  --fc                          FC threshold to display gene labels in the volcano plot [3]
+
