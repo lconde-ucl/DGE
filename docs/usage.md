@@ -6,8 +6,7 @@
 * [Main arguments](#main-arguments)
     * [`-profile`](#-profile-single-dash)
         * [`legion`](#legion)
-        * [`standard`](#standard)
-        * [`none`](#none)
+        * [`myriad`](#myriad)
     * [`--inputdir`](#--inputdir)
     * [`--metadata`](#--metadata)
 * [Arguments - kallisto mode](#kallisto-arguments)
@@ -165,9 +164,11 @@ File with gene sets in GMX format. If not specified, it will use the hallmark ge
 
 ### `--min_set NUM`
 Ignore gene sets that contain less than NUM genes.
+Default = 15
 
 ### `--max_set NUM`
 Ignore gene sets that contain more than NUM genes.
+Default = 500
 
 ### `--perm NUM`
 Number of permutations for the NES calculation.
