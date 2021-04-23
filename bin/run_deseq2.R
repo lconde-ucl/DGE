@@ -159,10 +159,10 @@ dds <- DESeq(dds)
 #---------
 #- PCA
 #----------
-if(ncol(colData) > 50){
-	transformation <- rlog(dds, blind=TRUE)
+if(nrow(colData) < 50){
+	transformation <- rlog(dds, blind=FLASE)
 }else{
-	transformation <- vst(dds, blind=TRUE)
+	transformation <- vst(dds, blind=FALSE)
 }
 pcaData<- plotPCA(transformation, intgroup=colnames(colData), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))
