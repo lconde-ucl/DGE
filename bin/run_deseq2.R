@@ -160,7 +160,7 @@ dds <- DESeq(dds)
 #- PCA
 #----------
 if(nrow(colData) < 50){
-	transformation <- rlog(dds, blind=FLASE)
+	transformation <- rlog(dds, blind=FALSE)
 }else{
 	transformation <- vst(dds, blind=FALSE)
 }
