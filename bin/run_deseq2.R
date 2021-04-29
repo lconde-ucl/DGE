@@ -147,9 +147,9 @@ if(kallisto == 'false'){
 }
 
 #-------------------------------------------
-#- remove genes with 0 counts in all samples
+#- remove genes with <100 counts in all samples
 #-------------------------------------------
-dds <- dds[ rowSums(counts(dds)) > 1, ]
+dds <- dds[ rowSums(counts(dds)) > 100, ]
 
 #---------
 #- Run DGE
