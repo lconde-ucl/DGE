@@ -147,9 +147,9 @@ if(kallisto == 'false'){
 }
 
 #-------------------------------------------
-#- remove genes with <100 counts in all samples
+#- remove genes with <= 5 counts in all samples
 #-------------------------------------------
-dds <- dds[ rowSums(counts(dds)) > 100, ]
+dds <- dds[ rowSums(counts(dds)) > 5, ]
 
 #---------
 #- Run DGE
@@ -159,7 +159,7 @@ dds <- DESeq(dds)
 #---------
 #- PCA
 #----------
-if(nrow(colData) < 50){
+if(nrow(colData) < 30){
 	transformation <- rlog(dds, blind=FALSE)
 }else{
 	transformation <- vst(dds, blind=FALSE)
