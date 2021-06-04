@@ -197,6 +197,7 @@ process deseq2 {
     saveAs: {filename ->
             if (filename.indexOf("_MAplot.png") > 0) "deseq2_PlotsAndFiles/MAplots/$filename"
             else if (filename.indexOf("_VolcanoPlot.png") > 0) "deseq2_PlotsAndFiles/volcanoPlots/$filename"
+            else if (filename.indexOf("_heatmap.png") > 0) "deseq2_PlotsAndFiles/heatmapPlots/$filename"
             else if (filename.indexOf(".txt") > 0) "deseq2_PlotsAndFiles/files/$filename"
             else if (filename == "PCAplot.png") "deseq2_PlotsAndFiles/$filename"
 	    else "$filename"
@@ -204,7 +205,7 @@ process deseq2 {
 
     output:
     file "*.txt" into stats_for_gsea
-    file "*{_MAplot.png,_VolcanoPlot.png}"
+    file "*{_MAplot.png,_VolcanoPlot.png,_heatmap.png}"
     file "PCAplot.png"
     file "deseq2_report"
 
