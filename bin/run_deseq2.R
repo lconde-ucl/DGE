@@ -230,7 +230,7 @@ if (default == "no") {
 	       
 	#- alpha is fdr threshold for summary display only
 	res<-results(dds, contrast = contrast, alpha=0.05)
-	resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="normal")
+	resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="apeglm")
 	    
 	#----------------------------
 	#- File with all the results
@@ -326,7 +326,7 @@ if (default == "no") {
 
 			#- alpha is fdr threshold for summary display only
 			res<-results(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), alpha=0.05)
-			resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="normal")
+			resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="apeglm")
 	
 			#-----------------------
 			#- File with all results
