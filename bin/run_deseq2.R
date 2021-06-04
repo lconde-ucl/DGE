@@ -48,11 +48,6 @@ if (!require("png")){
   biocLite("png", suppressUpdates=TRUE)
   library("png")
 }
-if (!require("apeglm")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("apeglm", suppressUpdates=TRUE)
-  library("apeglm")
-}
 if (!require("ComplexHeatmap")){
   source("http://bioconductor.org/biocLite.R")
   biocLite("ComplexHeatmap", suppressUpdates=TRUE)
@@ -245,7 +240,7 @@ if (default == "no") {
 	       
 	#- alpha is fdr threshold for summary display only
 	res<-results(dds, contrast = contrast, alpha=0.05)
-	resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="apeglm")
+	resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="ashr")
 	    
 	#----------------------------
 	#- File with all the results
@@ -364,7 +359,7 @@ if (default == "no") {
 
 			#- alpha is fdr threshold for summary display only
 			res<-results(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), alpha=0.05)
-			resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="apeglm")
+			resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="ashr")
 	
 			#-----------------------
 			#- File with all results
