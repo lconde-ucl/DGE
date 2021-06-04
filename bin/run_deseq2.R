@@ -48,6 +48,11 @@ if (!require("png")){
   biocLite("png", suppressUpdates=TRUE)
   library("png")
 }
+if (!require("apeglm")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("apeglm", suppressUpdates=TRUE)
+  library("apeglm")
+}
 if (!require("ComplexHeatmap")){
   source("http://bioconductor.org/biocLite.R")
   biocLite("ComplexHeatmap", suppressUpdates=TRUE)
