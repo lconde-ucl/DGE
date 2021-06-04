@@ -13,6 +13,11 @@ if (!require("DESeq2")){
   biocLite("DESeq2", suppressUpdates=TRUE)
   library("DESeq2")
 }
+if (!require("ashr")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("ashr", suppressUpdates=TRUE)
+  library("ashr")
+}
 if (!require("rhdf5")){
   source("http://bioconductor.org/biocLite.R")
   biocLite("rhdf5", suppressUpdates=TRUE)
