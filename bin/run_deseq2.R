@@ -48,6 +48,16 @@ if (!require("png")){
   biocLite("png", suppressUpdates=TRUE)
   library("png")
 }
+if (!require("ComplexHeatmap")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("ComplexHeatmap", suppressUpdates=TRUE)
+  library("ComplexHeatmap")
+}
+if (!require("circlize")){
+  source("http://bioconductor.org/biocLite.R")
+  biocLite("circlize", suppressUpdates=TRUE)
+  library("circlize")
+}
 
 #------------
 #- Parse args
@@ -238,6 +248,26 @@ if (default == "no") {
 	write.table(resNorm, file=paste0(condition, "_", treatment, "_vs_", control, "_results.txt"), sep="\t",quote=F,row.names=T, col.names=NA)
 	    
 	#-----------------------
+	#- Heatmap plot
+	#-----------------------
+
+	de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
+	de_mat <- assay(transformation)[de,]
+
+	heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
+	png(file=heatmap_name)
+	p <- Heatmap(t(scale(t(de_mat))), 
+		name = "Normalized counts (scaled)",
+		row_names_gp = gpar(fontsize = 4),column_names_gp = gpar(fontsize = 4),
+		heatmap_legend_param = list(legend_direction = "horizontal"),
+		show_column_names = TRUE,
+		show_row_names = TRUE,
+		cluster_columns = TRUE,
+		column_names_side = "top")
+	print(p)
+	dev.off()
+	    
+	#-----------------------
 	#- MA plot
 	#-----------------------
 	maplot_name<-paste0(condition, "_", treatment, "_vs_", control, "_MAplot.png")
@@ -305,6 +335,9 @@ if (default == "no") {
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish("<h4>Top 100 differentially expressed genes", des2Report)
 	publish(resNorm,des2Report, contrast=paste0(condition, "_", treatment, "_vs_", control), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[condition]])
+	publish("<h4>Heatmap", des2Report)
+	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
+	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	
 	finish(des2Report)
 
@@ -332,6 +365,26 @@ if (default == "no") {
 			#- File with all results
 			#-----------------------
 			write.table(resNorm, file=paste0(colnames(colData)[i], "_", paste0(as.character(pairs[,j]),collapse="_vs_"), "_results.txt"), sep="\t",quote=F,row.names=T, col.names=NA)
+
+			#-----------------------
+			#- Heatmap plot
+			#-----------------------
+		
+			de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
+			de_mat <- assay(transformation)[de,]
+		
+			heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
+			png(file=heatmap_name)
+			p <- Heatmap(t(scale(t(de_mat))), 
+				name = "Normalized counts (scaled)",
+				row_names_gp = gpar(fontsize = 4),column_names_gp = gpar(fontsize = 4),
+				heatmap_legend_param = list(legend_direction = "horizontal"),
+				show_column_names = TRUE,
+				show_row_names = TRUE,
+				cluster_columns = TRUE,
+				column_names_side = "top")
+			print(p)
+			dev.off()
 
 			#-----------------------
 			#- MA plot
@@ -395,6 +448,9 @@ if (default == "no") {
 			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			publish("<h4>Top 100 differentially expressed genes", des2ReportALL)
 			publish(resNorm,des2ReportALL, contrast = paste0(colnames(colData)[i], "_", paste0(as.character(pairs[,j]),collapse="_vs_")), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
+			publish("<h4>Heatmap", des2ReportALL)
+			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
+			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			n=n+1
 		}	
 	}
