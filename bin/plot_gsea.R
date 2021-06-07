@@ -32,7 +32,7 @@ p <- ggplot(data, aes(NES, GENESET)) +
     geom_point(aes(colour=FDR_p, size=RATIO)) +
     geom_segment(mapping = aes(yend=GENESET0, xend = 0), size=0.5, colour="gray50") +
     geom_point(aes(colour=FDR_p, size=RATIO)) +
-    scale_color_gradient(limits=c(0, 0.10), low="red", high="white") +
+    scale_color_gradient(limits=c(0, 0.05), low="red", high="white") +
     geom_vline(xintercept=0, size=0.5, colour="gray50") +
     theme(strip.text.x = element_text(size = 8), 
 	  panel.background=element_rect(fill="gray95", colour="gray95"),

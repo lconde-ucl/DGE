@@ -230,7 +230,7 @@ EOF
 
     run_deseq2.R $inputdir $metadata deseq2.conf
     mv *_AllPlot.png deseq2_report/figuresDESeq2_nextflow_pipeline_results/.
-    cp PCAplot.png deseq2_report/figuresDESeq2_nextflow_pipeline_results/.
+    cp PCAplot.png *_heatmap.png deseq2_report/figuresDESeq2_nextflow_pipeline_results/.
     """
 }
 

@@ -260,12 +260,15 @@ if (default == "no") {
 	de_mat <- assay(transformation)[de,]
 
 	heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
-	png(file=heatmap_name)
+	png(file=heatmap_name, width=1500, height=2000, res=200)
+
+	ha<-HeatmapAnnotation(df = select(colData, !!condition))
 	p <- Heatmap(t(scale(t(de_mat))), 
 		name = "Normalized counts (scaled)",
-		row_names_gp = gpar(fontsize = 4),column_names_gp = gpar(fontsize = 4),
+		row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
 		heatmap_legend_param = list(legend_direction = "horizontal"),
 		show_column_names = TRUE,
+		top_annotation = ha,
 		show_row_names = TRUE,
 		cluster_columns = TRUE,
 		column_names_side = "top")
@@ -338,11 +341,11 @@ if (default == "no") {
 	publish("<h4>MA/Volcano plots", des2Report)
 	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",allplot_name))
 	publish(hwrite(himg, br=TRUE, center=T), des2Report)
-	publish(paste0("<h4>Heatmap DE genes (FDR < 0.05, |log2FC| > ",fc,")"), des2Report)
-	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
-	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	publish("<h4>Top 100 differentially expressed genes", des2Report)
 	publish(resNorm,des2Report, contrast=paste0(condition, "_", treatment, "_vs_", control), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[condition]])
+	publish(paste0("<h4>Heatmap DE genes (FDR 0.05, |log2FC| ",fc,")"), des2Report)
+	himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
+	publish(hwrite(himg, br=TRUE, center=T), des2Report)
 	
 	finish(des2Report)
 
@@ -379,12 +382,15 @@ if (default == "no") {
 			de_mat <- assay(transformation)[de,]
 		
 			heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
-			png(file=heatmap_name)
+			png(file=heatmap_name, width=1500, height=2000, res=200)
+
+			ha<-HeatmapAnnotation(df = select(colData, !!condition))
 			p <- Heatmap(t(scale(t(de_mat))), 
 				name = "Normalized counts (scaled)",
-				row_names_gp = gpar(fontsize = 4),column_names_gp = gpar(fontsize = 4),
+				row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
 				heatmap_legend_param = list(legend_direction = "horizontal"),
 				show_column_names = TRUE,
+				top_annotation = ha,
 				show_row_names = TRUE,
 				cluster_columns = TRUE,
 				column_names_side = "top")
@@ -451,11 +457,11 @@ if (default == "no") {
 			publish("<h4>MA/Volcano plots", des2ReportALL)
 			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",allplot_name))
 			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
-			publish(paste0("<h4>Heatmap DE genes (FDR < 0.05, |log2FC| > ",fc,")"), des2Report)
-			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
-			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			publish("<h4>Top 100 differentially expressed genes", des2ReportALL)
 			publish(resNorm,des2ReportALL, contrast = paste0(colnames(colData)[i], "_", paste0(as.character(pairs[,j]),collapse="_vs_")), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
+			publish(paste0("<h4>Heatmap DE genes (FDR 0.05, |log2FC| ",fc,")"), des2Report)
+			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
+			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			n=n+1
 		}	
 	}
