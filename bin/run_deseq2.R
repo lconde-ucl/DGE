@@ -187,6 +187,7 @@ png(file=pcaplot_name)
 if(ncol(colData)>1){
   ggplot(pcaData, aes(PC1, PC2, color=colData[,1], shape=colData[,2])) +
     geom_point(size=3) +
+    scale_shape_manual(values=1:nlevels(colData[,2])) +
     ggtitle("PCA plot") +
     xlab(paste0("PC1: ",percentVar[1],"% variance")) +
     ylab(paste0("PC2: ",percentVar[2],"% variance")) + 
