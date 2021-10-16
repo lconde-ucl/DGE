@@ -257,24 +257,38 @@ if (default == "no") {
 	#- Heatmap plot
 	#-----------------------
 
-	de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
-	de_mat <- assay(transformation)[de,]
-
 	heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
-	png(file=heatmap_name, width=1500, height=2000, res=200)
+	
+	de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
+	
+	if(length(de) < 5) {
+		message<-paste0("Only ", length(de), " genes with Padj<0.05 and Log2FC>",fc,". Please rerun the pipeline with a lower FC threshold to generate a heatmap"
+		mtext(message, side = 3)
+		
+		png(file=heatmap_name, width=1500, height=2000, res=200)
+		plot(0, type = 'n', axes = FALSE, ann = FALSE)
+		mtext(message, side = 3)
+		dev.off()
 
-	ha<-HeatmapAnnotation(df = select(colData, !!condition))
-	p <- Heatmap(t(scale(t(de_mat))), 
-		name = "Normalized counts (scaled)",
-		row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
-		heatmap_legend_param = list(legend_direction = "horizontal"),
-		show_column_names = TRUE,
-		top_annotation = ha,
-		show_row_names = TRUE,
-		cluster_columns = TRUE,
-		column_names_side = "top")
-	print(p)
-	dev.off()
+	}else{
+
+		de_mat <- assay(transformation)[de,]
+	
+		png(file=heatmap_name, width=1500, height=2000, res=200)
+	
+		ha<-HeatmapAnnotation(df = select(colData, !!condition))
+		p <- Heatmap(t(scale(t(de_mat))), 
+			name = "Normalized counts (scaled)",
+			row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
+			heatmap_legend_param = list(legend_direction = "horizontal"),
+			show_column_names = TRUE,
+			top_annotation = ha,
+			show_row_names = TRUE,
+			cluster_columns = TRUE,
+			column_names_side = "top")
+		print(p)
+		dev.off()
+	}
 	    
 	#-----------------------
 	#- MA plot
@@ -379,24 +393,38 @@ if (default == "no") {
 			#- Heatmap plot
 			#-----------------------
 		
-			de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
-			de_mat <- assay(transformation)[de,]
-		
 			heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
-			png(file=heatmap_name, width=1500, height=2000, res=200)
 
-			ha<-HeatmapAnnotation(df = select(colData, !!condition))
-			p <- Heatmap(t(scale(t(de_mat))), 
-				name = "Normalized counts (scaled)",
-				row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
-				heatmap_legend_param = list(legend_direction = "horizontal"),
-				show_column_names = TRUE,
-				top_annotation = ha,
-				show_row_names = TRUE,
-				cluster_columns = TRUE,
-				column_names_side = "top")
-			print(p)
-			dev.off()
+			de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
+			
+			if(length(de) < 5) {
+                		message<-paste0("Only ", length(de), " genes with Padj<0.05 and Log2FC>",fc,". Please rerun the pipeline with a lower FC threshold to generate a heatmap"
+                		mtext(message, side = 3)
+
+                		png(file=heatmap_name, width=1500, height=2000, res=200)
+                		plot(0, type = 'n', axes = FALSE, ann = FALSE)
+                		mtext(message, side = 3)
+                		dev.off()
+
+        		}else{
+
+				de_mat <- assay(transformation)[de,]
+			
+				png(file=heatmap_name, width=1500, height=2000, res=200)
+	
+				ha<-HeatmapAnnotation(df = select(colData, !!condition))
+				p <- Heatmap(t(scale(t(de_mat))), 
+					name = "Normalized counts (scaled)",
+					row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
+					heatmap_legend_param = list(legend_direction = "horizontal"),
+					show_column_names = TRUE,
+					top_annotation = ha,
+					show_row_names = TRUE,
+					cluster_columns = TRUE,
+					column_names_side = "top")
+				print(p)
+				dev.off()
+			}
 
 			#-----------------------
 			#- MA plot
