@@ -45,7 +45,7 @@ def helpMessage() {
 
     Options - gsea (human only):
       --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
-      --gmt                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
+      --gmx                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
       --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
       --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
       --perm NUM                    Number of permutations [1000]";
