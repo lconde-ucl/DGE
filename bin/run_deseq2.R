@@ -262,7 +262,7 @@ if (default == "no") {
 	de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
 	
 	if(length(de) < 5) {
-		message<-paste0("Only ", length(de), " genes with Padj<0.05 and Log2FC>",fc,". Please rerun the pipeline with a lower FC threshold to generate a heatmap")
+		message<-paste0("Only ", length(de), " genes with Padj<0.05 and Log2FC>",fc,".\nPlease rerun the pipeline with a lower FC threshold to generate a heatmap")
 		
 		png(file=heatmap_name, width=1500, height=2000, res=200)
 		plot(0, type = 'n', axes = FALSE, ann = FALSE)
