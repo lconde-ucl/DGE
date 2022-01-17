@@ -2,67 +2,23 @@
 
 
 #----------------------------------
-#- Load / install required packages
+#- Load required packages
+#- (all of them are qvailable in bioconda/R)
 #----------------------------------
 library(dplyr)
 library(ggplot2)
 library(ggbeeswarm)
-
-if (!require("DESeq2")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("DESeq2", suppressUpdates=TRUE)
-  library("DESeq2")
-}
-if (!require("ashr")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("ashr", suppressUpdates=TRUE)
-  library("ashr")
-}
-if (!require("rhdf5")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("rhdf5", suppressUpdates=TRUE)
-  library("rhdf5")
-}
-if (!require("tximport")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("tximport", suppressUpdates=TRUE)
-  library("tximport")
-}
-if (!require("ReportingTools")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("ReportingTools", suppressUpdates=TRUE)
-  library("ReportingTools")
-}
-if (!require("hwriter")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("hwriter", suppressUpdates=TRUE)
-  library("hwriter")
-}
-if (!require("ini")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("ini", suppressUpdates=TRUE)
-  library("ini")
-}
-if (!require("ggrepel")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("ggrepel", suppressUpdates=TRUE)
-  library("ggrepel")
-}
-if (!require("png")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("png", suppressUpdates=TRUE)
-  library("png")
-}
-if (!require("ComplexHeatmap")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("ComplexHeatmap", suppressUpdates=TRUE)
-  library("ComplexHeatmap")
-}
-if (!require("circlize")){
-  source("http://bioconductor.org/biocLite.R")
-  biocLite("circlize", suppressUpdates=TRUE)
-  library("circlize")
-}
+library("DESeq2")
+library("ashr")
+library("rhdf5")
+library("tximport")
+library("ReportingTools")
+library("hwriter")
+library("ini")
+library("ggrepel")
+library("png")
+library("ComplexHeatmap")
+library("circlize")
 
 #------------
 #- Parse args
