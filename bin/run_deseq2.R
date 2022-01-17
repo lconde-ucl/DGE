@@ -392,7 +392,7 @@ if (default == "no") {
 			#- Heatmap plot
 			#-----------------------
 		
-			heatmap_name<-paste0(condition, "_", treatment, "_vs_", control, "_heatmap.png")
+			heatmap_name<-paste0(colnames(colData)[i], "_",  paste0(as.character(pairs[,j]),collapse="_vs_"), "_heatmap.png")
 
 			de <- rownames(resNorm[resNorm$padj<0.05 & !is.na(resNorm$padj) & abs(resNorm$log2FoldChange) > fc, ])
 			
@@ -410,7 +410,7 @@ if (default == "no") {
 			
 				png(file=heatmap_name, width=1500, height=2000, res=200)
 	
-				ha<-HeatmapAnnotation(df = select(colData, !!condition))
+				ha<-HeatmapAnnotation(df = select(colData, !!colnames(colData)[i]))
 				p <- Heatmap(t(scale(t(de_mat))), 
 					name = "Normalized counts (scaled)",
 					row_names_gp = gpar(fontsize = 6),column_names_gp = gpar(fontsize = 4),
