@@ -264,7 +264,7 @@ if (default == "no") {
 	if(length(de) < 5) {
 		message<-paste0("Only ", length(de), " genes with Padj<0.05 and Log2FC>",fc,".\nPlease rerun the pipeline with a lower FC threshold to generate a heatmap")
 		
-		png(file=heatmap_name, width=1500, height=2000, res=200)
+		png(file=heatmap_name, width=200, height=200, res=200)
 		plot(0, type = 'n', axes = FALSE, ann = FALSE)
 		mtext(message, side = 3)
 		dev.off()
