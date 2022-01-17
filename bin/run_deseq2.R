@@ -486,7 +486,7 @@ if (default == "no") {
 			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			publish("<h4>Top 100 differentially expressed genes", des2ReportALL)
 			publish(resNorm,des2ReportALL, contrast = paste0(colnames(colData)[i], "_", paste0(as.character(pairs[,j]),collapse="_vs_")), pvalueCutoff=1, n=100, DataSet=dds, factor=colData(dds)[[i]])
-			publish(paste0("<h4>Heatmap DE genes (FDR 0.05, |log2FC| ",fc,")"), des2Report)
+			publish(paste0("<h4>Heatmap DE genes (FDR 0.05, |log2FC| ",fc,")"), des2ReportALL)
 			himg <- hwriteImage(paste0("figuresDESeq2_nextflow_pipeline_results/",heatmap_name))
 			publish(hwrite(himg, br=TRUE,center=TRUE), des2ReportALL)
 			n=n+1
