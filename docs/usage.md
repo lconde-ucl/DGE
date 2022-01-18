@@ -158,7 +158,7 @@ Not used by default.
 ## Arguments - GSEA model
 
 For each comparison above, a GSEA analysis using the hallmark gene sets from MSigDB will be performed. Please note that the hallmark dataset contains HUGO IDs. If your gene counts contain
-Ensembl IDs (for example if these are results from the nfcore_rnaseq pipeline using human_38 assembly), you need to add the --gmx_ensembl flag. Also, if your data is from a species other than human, the default hallmark 
+Ensembl IDs (it will depend on what GFT file you used in the featurecounts step), you need to add the --gmx_ensembl flag. Also, if your data is from a species other than human, the default hallmark 
 gene set will not work for your data, and you will have to either skip GSEA with the --skip_gsea flag, or add an appropiate gene set with the --gmx argument.
 
  
