@@ -37,7 +37,8 @@
 
 ## Running the pipeline
 This is a basic pipeline for differential gene expression analysis that is meant to be run after the data has been processed with the 
-[nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline and therefore a featureCounts gene counts file (or kallisto abundance files) have been generated.
+[nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline (or the [nfcore rnaseq](https://github.com/nf-core/rnaseq) pipeline, tested on v1.4.2) 
+and therefore a featureCounts gene counts file (or kallisto abundance files) have been generated.
  
 The typical command for running the pipeline  with the "nextflow_mergefastq' alias is as follows:
 ```bash
@@ -77,7 +78,8 @@ configuration presets for different compute environments.
     * A generic configuration profile to be used with the UCL cluster myriad
 
 ### `--inputdir`
-This is used to specify the location of the results folder obtained after running the [nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline. For example:
+This is used to specify the location of the results folder obtained after running the [nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline (or the [nfcore rnaseq](https://github.com/nf-core/rnaseq) pipeline, 
+tested on v1.4.2). For example:
 
 ```bash
 --inputdir 'path/to/data/results_from_nextflow_rnaseq_pipeline/'
@@ -89,7 +91,8 @@ The DGE pipeline assumes that the `--inputdir` folder contains either a `[inputd
 run on kallisto mode). 
 
 Please note that running the nextflow_rnaseq pipeline is not mandatory, as long as you have a featureCounts file or kallisto abundance.h5 files, you can run the DGE pipeline, just organize the files in a folder structure like the 
-above.
+above. The featureCounts file shuld be formatted as outputted by the [nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline ("ENSEMBL_ID" column with gene names, followed by sample counts columns), or the
+[nfcore rnaseq](https://github.com/nf-core/rnaseq) pipeline ("Geneid" and "gene_name" columns with gene names, followed by sample counts columns)
 
 ### `--metadata`
 This should be a txt file where the first column are the sample IDs, and the other (1 or more) columns displays the conditions for each sample. The samples must match those in the featureCounts matrix data located in inputdir.

@@ -77,11 +77,21 @@ counts="featureCounts"
 if(kallisto == 'false'){
 
   countData<-read.table(paste0(inputdir,"/featureCounts/merged_gene_counts.txt"), sep="\t", header=T, check.names=FALSE)
-  geneID<-countData$ENSEMBL_ID
-  countData<-select(countData, -ENSEMBL_ID)
-  rownames(countData)<-geneID 
+  
+  if(colnames(countData)[1] == "ENSEMBL_ID"){
+	  geneID<-countData$ENSEMBL_ID
+	  countData<-select(countData, -ENSEMBL_ID)
+	  rownames(countData)<-geneID 
+  }else if (colnames(countData)[1] == "Geneid" & colnames(countData)[2] == "gene_name"){
+	  geneID<-countData$gene_name
+	  countData<-select(countData, -Geneid, -gene_name)
+	  rownames(countData)<-geneID 
+  }else{
+    stop("ERROR: unrecognized inputfile format. Please check that the file has the same format as the merged counts file outputted by the nextflow_ranseq or nfcore_rnaseq pipelines, i.e., ",
+         "\"ENSEMBL_ID\" column followed by sample counts, or \"Geneid\" and \"gene_name\" columns followed by sample counts.")
+  } 
 
-   if(length(rownames(colData)[!rownames(colData) %in% colnames(countData)]) > 0) {	
+  if(length(rownames(colData)[!rownames(colData) %in% colnames(countData)]) > 0) {	
     stop("ERROR: the following samples are not in the featureCounts matrix: ", paste(rownames(colData)[!rownames(colData) %in% colnames(countData)], collapse=", "),
          ". Please make sure that the first column of your metadata file has the sample IDs.")
   }else{
