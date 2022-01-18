@@ -83,7 +83,7 @@ if(kallisto == 'false'){
 	  countData<-select(countData, -ENSEMBL_ID)
 	  rownames(countData)<-geneID 
   }else if (colnames(countData)[1] == "Geneid" & colnames(countData)[2] == "gene_name"){
-	  geneID<-countData$gene_name
+	  geneID<-countData$Geneid
 	  countData<-select(countData, -Geneid, -gene_name)
 	  rownames(countData)<-geneID 
   }else{

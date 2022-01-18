@@ -43,9 +43,10 @@ def helpMessage() {
       --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
       --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
 
-    Options - gsea (human only):
+    Options - gsea:
       --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
-      --gmx                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB [null]
+      --gmx                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB (HUGO names). Ignored if --gmx_ensembl is present [null]
+      --gmx_ensembl                 Use the human hallmark gene sets with Ensembl IDs. If specified, the --gmx argument will be ignored [null]
       --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
       --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
       --perm NUM                    Number of permutations [1000]";
@@ -123,9 +124,15 @@ if(params.kallisto && params.assembly){
 }
 if(!params.skip_gsea){
 	if (params.assembly && params.assembly != 'hg19' && params.assembly != 'hg38'){
-	    exit 1, "GSEA can only be run on human (assembly hg19 or hg38). You are indicating that your assembly is ${params.assembly}. Please correct the assembly if this was a mistake, or use --skip_gsea to skip the GASE step"
+		if (!params.gmx){
+		    exit 1, "GSEA can only be run, with default hallmarks gene set, on human (assembly hg19 or hg38). You are indicating that your assembly is ${params.assembly}. Please correct the assembly if this was a mistake, or use --skip_gsea to skip the GSEA step, or add a --gmx gene set file for your species"
+		}
 	}else{
-		gmx = file(params.gmx)
+		if (params.gmx_ensembl){
+			gmx = file(params.gmxensembl)
+		}else{
+			gmx = file(params.gmx)	
+		}
 		if( !gmx.exists() ) exit 1, "GMX file not found: ${params.gmx}"
 	}
 }else{
@@ -162,7 +169,7 @@ if(params.kallisto){
 }
 if(!params.skip_gsea){
 	println "['GSEA step']         = True"
-	println "['GMX set']           = $params.gmx"
+	println "['GMX set']           = $gmx"
 	if(!params.assembly){
 		println "['Species']           = *Assuming Human*"
 	}

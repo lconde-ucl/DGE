@@ -13,7 +13,8 @@ and processes data using the following steps:
 ## deseq2
 
 The [DESeq2](https://bioconductor.org/packages/release/bioc/html/DESeq2.html) package is used for differential gene expression analysis.
-The pipeline produces text files and plots with the results, as well as an HTML report that contains a summary of the DGE results, This report shows a PCA plot on top, and then, for each comparison, shows MA and volcano plots, as well 
+The pipeline produces text files and plots with the results, as well as an HTML report that contains a summary of the DGE results, This report shows a PCA plot on top, and then, 
+for each comparison (contrast), shows MA and volcano plots, a heatmap, as well 
 as a table with the names, logFCs, pvlaues and boxplots for the top-100 differentially expressed genes. For example:
 
 ![dge](images/dge_report.png)

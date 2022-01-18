@@ -19,7 +19,8 @@
     * [`--control`](#--control)
 * [Arguments - gsea (human only)](#gsea-arguments)
     * [`--skip_gsea`](#--skip_gsea)
-    * [`--gmt`](#--gmt)
+    * [`--gmx`](#--gmx)
+    * [`--gmx_ensembl`](#--gmx_ensembl)
     * [`--min_set`](#--min_set)
     * [`--max_set`](#--max_set)
     * [`--perm`](#--perm)
@@ -156,14 +157,20 @@ Not used by default.
 
 ## Arguments - GSEA model
 
-For each comparison above, a GSEA analysis using the hallmark gene sets from MSigDB will be performed/
+For each comparison above, a GSEA analysis using the hallmark gene sets from MSigDB will be performed. Please note that the hallmark dataset contains HUGO IDs. If your gene counts contain
+Ensembl IDs (for example if these are results from the nfcore_rnaseq pipeline using human_38 assembly), you need to add the --gmx_ensembl flag. Also, if your data is from a species other than human, the default hallmark 
+gene set will not work for your data, and you will have to either skip GSEA with the --skip_gsea flag, or add an appropiate gene set with the --gmx argument.
+
  
 ### `--skip_gsea`
 Skip GSEA step, otherwise it will run GSEA on each result file.
 Not used by default.
 
-### `--gmt`
-File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB .
+### `--gmx`
+File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB (human HUGO IDs).
+
+### `--gmx_ensembl`
+Use a version of the MSigDB hallmark gene set with Ensembl IDs, obtained using the msigdbr R package. This flag overriddes the --gmx argument. 
 
 ### `--min_set NUM`
 Ignore gene sets that contain less than NUM genes.
