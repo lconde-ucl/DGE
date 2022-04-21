@@ -44,7 +44,7 @@ and therefore a featureCounts gene counts file (or kallisto abundance files) hav
 The typical command for running the pipeline  with the "nextflow_mergefastq' alias is as follows:
 ```bash
 module load blic-modules
-module load nextflow
+module load nextflow_dge
 
 nextflow_dge --inputdir results_rnaseq --metadata metadata.txt --outdir results_DGE
 ```
