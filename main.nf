@@ -34,7 +34,7 @@ def helpMessage() {
                                         and the other (1 or more) columns displays the conditions for each sample. The samples 
                                         must match those in the featureCounts matrix data located in inputdir [metadata.txt] 
     Options - kallisto mode:
-      --kallisto                    Run DESEq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly [null]
+      --kallisto                    Run DESeq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly [null]
       --assembly                    Required when in kallisto mode, should be the same assembly used when running kallisto. Possible values are hg19, hg38, or mm10 [null]
 
     Options - deseq2 model:
@@ -47,9 +47,9 @@ def helpMessage() {
       --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
       --gmx                         File with gene sets in GMX format. If not specified, it will use the hallmark gene sets from MSigDB (HUGO names). Ignored if --gmx_ensembl is present [null]
       --gmx_ensembl                 Use the human hallmark gene sets with Ensembl IDs. If specified, the --gmx argument will be ignored [null]
-      --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]";
-      --max_set NUM	            Ignore gene sets that contain more than NUM genes [500]";
-      --perm NUM                    Number of permutations [1000]";
+      --min_set NUM                 Ignore gene sets that contain less than NUM genes [15]"
+      --max_set NUM	                Ignore gene sets that contain more than NUM genes [500]"
+      --perm NUM                    Number of permutations [1000]"
       
 
     Options - other:
@@ -60,7 +60,7 @@ def helpMessage() {
 }
 
 
-// Show help emssage
+// Show help message
 params.help = false
 if (params.help){
     helpMessage()
@@ -86,7 +86,7 @@ params.pval = 1e-50
 params.fc = 3
 
 if( !params.inputdir ){
-    exit 1, "No inputdir specified!"
+    exit 1, "No inputdir specified! Specify path with --inputdir."
 }
 inputdir = file(params.inputdir)
 if( !inputdir.exists() ) exit 1, "Inputdir folder not found: ${params.inputdir}. Specify path with --inputdir."
@@ -98,16 +98,16 @@ metadata = file(params.metadata)
 if( !metadata.exists() ) exit 1, "Metadata file not found: ${params.metadata}. Specify path with --metadata."
 
 if ((params.design) && (!params.condition || !params.treatment || !params.control)){
-    exit 1, "Invalid arguments: --design \'${params.design}\' requieres --condition, --treatment and --control. Pelase specify all of them or run the pipeline without specifying any design"
+    exit 1, "Invalid arguments: --design \'${params.design}\' requires --condition, --treatment and --control. Please specify all of them or run the pipeline without specifying any design"
 }
 if ((params.condition) && (!params.design || !params.treatment || !params.control)){
-    exit 1, "Invalid arguments: --condition \'${params.condition}\' requieres --design, --treatment and --control. Pelase specify all of them or run the pipeline without specifying any design"
+    exit 1, "Invalid arguments: --condition \'${params.condition}\' requires --design, --treatment and --control. Please specify all of them or run the pipeline without specifying any design"
 }
 if ((params.treatment) && (!params.design || !params.condition || !params.control)){
-    exit 1, "Invalid arguments: --treatment \'${params.treatment}\' requieres --design, --condition and --control. Pelase specify all of them or run the pipeline without specifying any design"
+    exit 1, "Invalid arguments: --treatment \'${params.treatment}\' requires --design, --condition and --control. Please specify all of them or run the pipeline without specifying any design"
 }
 if ((params.control) && (!params.design || !params.treatment || !params.condition)){
-    exit 1, "Invalid arguments: --control \'${params.control}\' requieres --design, --condition and --treatment. Pelase specify all of them or run the pipeline without specifying any design"
+    exit 1, "Invalid arguments: --control \'${params.control}\' requires --design, --condition and --treatment. Please specify all of them or run the pipeline without specifying any design"
 }
 if (params.kallisto  && !params.assembly){
     exit 1, "Running the pipeline in kallisto mode requires specifying an assembly. Valid options: 'hg19', 'hg38', 'mm10'"
