@@ -36,11 +36,15 @@
     * [`--max_cpus`](#--max_cpus)
 
 
-## Running the pipeline
+
+ ## Input data requirements
+
 This is a basic pipeline for differential gene expression analysis that is meant to be run after the data has been processed with the 
 [nextflow_rnaseq](https://github.com/UCL-BLIC/rnaseq) pipeline (or the [nfcore rnaseq](https://github.com/nf-core/rnaseq) pipeline, tested on v1.4.2) 
 and therefore a featureCounts gene counts file (or kallisto abundance files) have been generated.
- 
+
+## Running the pipeline at UCL
+
 The typical command for running the pipeline  with the "nextflow_mergefastq' alias is as follows:
 ```bash
 module load blic-modules
@@ -49,7 +53,7 @@ module load nextflow_dge
 nextflow_dge --inputdir results_rnaseq --metadata metadata.txt --outdir results_DGE
 ```
 
-This will launch the pipeline with the `legion` or `myriad` configuration profile, depending on where you submit the job from.
+This will launch the pipeline with the `legion` or `myriad` configuration profile (these are clusters at UCL), depending on where you submit the job from.
 
 Note that the pipeline will create the following files in your working directory:
 
@@ -86,7 +90,7 @@ tested on v1.4.2). For example:
 --inputdir 'path/to/data/results_from_nextflow_rnaseq_pipeline/'
 ```
 
-If left unspecified, it will look for the default dir: './results'
+If left unspecified, it will look for input data in the default dir: './results'
 
 The DGE pipeline assumes that the `--inputdir` folder contains either a `[inputdir]/featureCounts/merged_gene_counts.txt` file (if run on normal mode), or one or more `[inputdir]/kallisto/SAMPLENAME/abundance.h5` abundance files (if 
 run on kallisto mode). 
@@ -114,7 +118,7 @@ If left unspecified, it will look for the default dir: './metadata.txt'
 ## Arguments - kallisto mode
 
 ### `--kallisto`
-Run DESEq2 on kallisto abundance files instead of on featureCounts matrix. Requires specifying the assembly.
+Run DESeq2 on kallisto abundance files instead of on a featureCounts matrix. Requires specifying the assembly.
 Not used by default.
 
 ### `--assembly`
