@@ -3,11 +3,11 @@
 
 #----------------------------------
 #- Load required packages
-#- (all of them are qvailable in bioconda/R)
+#- (all of them are available in bioconda/R)
 #----------------------------------
-library(dplyr)
-library(ggplot2)
-library(ggbeeswarm)
+library("dplyr")
+library("ggplot2")
+library("ggbeeswarm")
 library("DESeq2")
 library("ashr")
 library("rhdf5")
@@ -87,7 +87,7 @@ if(kallisto == 'false'){
 	  countData<-select(countData, -Geneid, -gene_name)
 	  rownames(countData)<-geneID 
   }else{
-    stop("ERROR: unrecognized inputfile format. Please check that the file has the same format as the merged counts file outputted by the nextflow_ranseq or nfcore_rnaseq pipelines, i.e., ",
+    stop("ERROR: unrecognized input file format. Please check that the file has the same format as the merged counts file outputted by the nextflow_rnaseq or nfcore_rnaseq pipelines, i.e., ",
          "\"ENSEMBL_ID\" column followed by sample counts, or \"Geneid\" and \"gene_name\" columns followed by sample counts.")
   } 
 
@@ -97,7 +97,7 @@ if(kallisto == 'false'){
   }else{
     countData = countData[ , rownames(colData) ]
     if(!all(rownames(colData) == colnames(countData))) {	
-      stop("Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
+      stop("ERROR: Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
     }
   }
   dds <- DESeqDataSetFromMatrix(countData = countData,
@@ -118,7 +118,7 @@ if(kallisto == 'false'){
     countData<-txi.kallisto$counts
     countData = countData[ , rownames(colData) ] #- this is not really necessary as this should already be sorted properly
     if(!all(rownames(colData) == colnames(countData))) {	
-      stop("Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
+      stop("ERROR: Something is wrong, this should never happen [rownames(colData) ne colnames(countData)??]")
     }  
     dds <- DESeqDataSetFromTximport(txi=txi.kallisto,
                                     colData=colData,
@@ -286,7 +286,7 @@ if (default == "no") {
 	  scale_color_manual(values=c("indianred1", "gold2", "cornflowerblue", "gray47")) + 
 	  theme_classic() + theme(legend.position = "bottom", legend.title=element_blank())
 	
-	#- add gene labels for gene swith pval anf fc below theresholds
+	#- add gene labels for gene switch pval anf fc below theresholds
 	ha2 <- ha %>%
 	  filter(Pval < pval & (logFC >= fc | logFC <= -fc)) %>% 
 	  select(gene,logFC,Pval, Col)

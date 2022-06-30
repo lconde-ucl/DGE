@@ -1,5 +1,7 @@
 # DGE: Installation
 
+## Installation at UCL
+
 The DGE pipeline is already installed in myriad. You just need to load it and start using it:
 
 ```bash
@@ -13,3 +15,11 @@ By default, the pipeline runs with the `legion` configuration profile [`conf/leg
 [`conf/myriad.config`](../conf/myriad.config) if you send the job from myriad.
 
 The 'standard' configuration (using the `local` executor) is not enabled.
+
+
+## Installation at other sites
+
+You'll need to install 
+* nextflow, eg via bioconda or https://www.nextflow.io/index.html
+* the R packages mentioned in bin/run_deseq2.R
+
