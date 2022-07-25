@@ -13,11 +13,10 @@ while(<INF>){
 	chomp $_;
 	my @a=split("\t",$_);
 	($a[0] eq '') && next;
-	($a[5] eq 'NA') && next;
 
 	my $fc=$a[2];
 	my $gene=$a[0];
-	my $pval=$a[5];
+	my $pval=$a[4];
 	if($pval == 0 ){
 		print $_."\n";
 		$pval=10e-308;
