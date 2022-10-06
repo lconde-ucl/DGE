@@ -17,6 +17,10 @@ while(<INF>){
 	my $fc=$a[2];
 	my $gene=$a[0];
 	my $pval=$a[4];
+	
+	#- REMOVE P-VALS THAT ARE NA!!! OTHERWISE THEY BECOME -308!!!
+	($pval eq 'NA') && next;
+
 	if($pval == 0 ){
 		print $_."\n";
 		$pval=10e-308;
