@@ -22,8 +22,10 @@ data$FDR_p[data$FDR_p == 0] <- (1/perm)
 ##- no need to readjust pvalues as there is only one ranked list of genes
 #data<-data %>%  mutate(FDR=p.adjust(FDR_p, method="BH"))
 
-#- Add numeric variable for GENESET to be able to draw horizontal lines
-data <- transform(data, GENESET0 = as.numeric(GENESET))
+#- THIS WORKED IN PREVIOUS VERSIONS OF R, NOT NOW
+##- Add numeric variable for GENESET to be able to draw horizontal lines
+#data <- transform(data, GENESET0 = as.numeric(GENESET))
+data <- mutate(data, GENESET0 = GENESET)
 
 #- get plot (based on code from https://www.biostars.org/p/168044/)
 

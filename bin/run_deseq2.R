@@ -41,7 +41,7 @@ tx2gene.file = args$deseq2$TX2GENE
 #--------------
 #- Get metadata
 #--------------
-colData <- read.table(metadata, sep="\t",header=T)
+colData <- read.table(metadata, sep="\t",header=T, stringsAsFactors=TRUE)
 samples<-colData[,1]
 colnames<-colnames(colData)
 colData<-as.data.frame(colData[,-c(1)])
