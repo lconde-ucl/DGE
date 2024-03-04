@@ -1,4 +1,12 @@
-# nf-core/DGE
+# Deprecated Pipeline Notice
+
+**Important:** The DGE pipeline is now deprecated and has been replaced by a DSL2 version, available at [lconde-ucl/DGE2](https://github.com/lconde-ucl/DGE2)
+
+<br>
+<br>
+
+
+# DGE
 **Run DESeq2/GSEA on the featureCounts matrix or kallisto counts obtained from the nextflow_rnaseq pipeline**
 
 [![Build Status](https://travis-ci.org/nf-core/deseq2.svg?branch=master)](https://travis-ci.org/nf-core/deseq2)
