@@ -32,6 +32,7 @@ design = args$deseq2$DESIGN
 condition = args$deseq2$CONDITION
 treatment = args$deseq2$TREATMENT
 control = args$deseq2$CONTROL
+rlog = args$deseq2$RLOG
 pval = as.numeric(args$deseq2$PVAL)
 fc = as.numeric(args$deseq2$FC)
 kallisto = args$deseq2$KALLISTO
@@ -140,10 +141,10 @@ dds <- DESeq(dds)
 #---------
 #- PCA
 #----------
-if(nrow(colData) < 30){
-	transformation <- rlog(dds, blind=FALSE)
-}else{
+if(rlog == 'false'){
 	transformation <- vst(dds, blind=FALSE)
+}else{
+	transformation <- rlog(dds, blind=FALSE)
 }
 pcaData<- plotPCA(transformation, intgroup=colnames(colData), returnData=TRUE)
 percentVar <- round(100 * attr(pcaData, "percentVar"))

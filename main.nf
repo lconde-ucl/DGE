@@ -42,6 +42,7 @@ def helpMessage() {
       --condition                   Specifies 'condition' for the DESeq2 contrast. Requires --design to be specified [null]
       --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
       --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
+      --rlog                        Apply a 'regularized log' transformation instead of the default 'vst' [null]
 
     Options - gsea:
       --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
@@ -78,6 +79,7 @@ params.design = false
 params.condition = false
 params.treatment = false
 params.control = false
+params.rlog = false
 params.skip_gsea = false
 params.perm = 1000
 params.min_set = 15
@@ -161,6 +163,11 @@ if(params.design != "-"){
 }else{
 	println "['DESeq2 design']     = No design specified"
 }
+if(params.rlog){
+	println "['DESeq2 transformation']  = rlog"
+}else{
+	println "['DESeq2 ransformation']  = "vst"
+}
 if(params.kallisto){
 	println "['Read counts mode']  = kallisto"
 	println "['Assembly']          = $params.assembly"
@@ -228,6 +235,7 @@ DESIGN = $params.design
 CONDITION = $params.condition
 TREATMENT = $params.treatment
 CONTROL = $params.control
+RLOG = $params.rlog
 PVAL = $params.pval
 FC = $params.fc
 KALLISTO = $params.kallisto
