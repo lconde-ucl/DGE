@@ -164,9 +164,9 @@ if(params.design != "-"){
 	println "['DESeq2 design']     = No design specified"
 }
 if(params.rlog){
-	println "['DESeq2 transformation']  = rlog"
+	println "['DESeq2 transform']  = rlog"
 }else{
-	println "['DESeq2 ransformation']  = "vst"
+	println "['DESeq2 transform']  = vst"
 }
 if(params.kallisto){
 	println "['Read counts mode']  = kallisto"
