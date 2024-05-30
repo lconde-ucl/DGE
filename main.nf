@@ -43,6 +43,7 @@ def helpMessage() {
       --treatment                   Specifies 'treatment' for the DESeq2 contrast. Requires --design to be specified [null]
       --control                     Specifies 'control' for the DESeq2 contrast. Requires --design to be specified [null]
       --rlog                        Apply a 'regularized log' transformation instead of the default 'vst' [null]
+      --skipShrink                  Do not apply LFC shrinkage [null]
 
     Options - gsea:
       --skip_gsea                   Skip GSEA step, otherwise it will run GSEA on each result file [false]
@@ -80,6 +81,7 @@ params.condition = false
 params.treatment = false
 params.control = false
 params.rlog = false
+params.skipShrink = false
 params.skip_gsea = false
 params.perm = 1000
 params.min_set = 15
@@ -168,6 +170,9 @@ if(params.rlog){
 }else{
 	println "['DESeq2 transform']  = vst"
 }
+if(params.skipShrink){
+	println "['lfcShrink']         = Skip lfcShrink step"
+}
 if(params.kallisto){
 	println "['Read counts mode']  = kallisto"
 	println "['Assembly']          = $params.assembly"
@@ -236,6 +241,7 @@ CONDITION = $params.condition
 TREATMENT = $params.treatment
 CONTROL = $params.control
 RLOG = $params.rlog
+SHRINK = $params.skipShrink
 PVAL = $params.pval
 FC = $params.fc
 KALLISTO = $params.kallisto

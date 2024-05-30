@@ -33,6 +33,7 @@ condition = args$deseq2$CONDITION
 treatment = args$deseq2$TREATMENT
 control = args$deseq2$CONTROL
 rlog = args$deseq2$RLOG
+skipshrink = args$deseq2$SHRINK
 pval = as.numeric(args$deseq2$PVAL)
 fc = as.numeric(args$deseq2$FC)
 kallisto = args$deseq2$KALLISTO
@@ -213,8 +214,13 @@ if (default == "no") {
 	       
 	#- alpha is fdr threshold for summary display only
 	res<-results(dds, contrast = contrast, alpha=0.05)
-	resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="ashr")
-	    
+
+	if (skipshrink == "false") {
+		resNorm <- lfcShrink(dds, contrast = contrast, res=res, type="ashr")
+	}else{
+		resNorm <- res 
+	}
+    
 	#----------------------------
 	#- File with all the results
 	#----------------------------
