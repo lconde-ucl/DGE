@@ -354,8 +354,12 @@ if (default == "no") {
 
 			#- alpha is fdr threshold for summary display only
 			res<-results(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), alpha=0.05)
-			resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="ashr")
-	
+			if (skipshrink == "false") {
+				resNorm <- lfcShrink(dds, contrast = c(colnames(colData)[i],as.character(pairs[,j])), res=res, type="ashr")
+			}else{
+				resNorm <- res 
+			}
+			
 			#-----------------------
 			#- File with all results
 			#-----------------------
