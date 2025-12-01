@@ -130,9 +130,10 @@ if(kallisto == 'false'){
 }
 
 #-------------------------------------------
-#- remove genes with <= 5 counts in all samples
+#- only keep genes where at least 2 samples have >5 reads
 #-------------------------------------------
-dds <- dds[ rowSums(counts(dds)) > 5, ]
+dds <- dds[rowSums(counts(dds) > 5) >= 2, ]
+
 
 #---------
 #- Run DGE
